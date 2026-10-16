@@ -14,10 +14,11 @@ Parent issue
 
 1. A new issue is assigned to the squad: if it is an epic (it has sub-issues that carry gh_number metadata, synced from GitHub sub-issues), do not plan it: say in one line that the work happens in its sub-issues, and stop. Otherwise mention the Planner and ask for a plan.
 2. The Planner has posted a plan: say "Plan ready for review" and stop. Only the human can move the work forward from here.
-3. The human comments on the parent:
-   - approval of the plan: mention the Architect.
-   - requested changes to the plan: mention the Planner.
+3. The human comments on the parent. A plan is approved only when a human comment contains a line that is nothing but an approval word: "approve", "approved", "LGTM" or "go ahead" (any case, optional trailing punctuation). The line can be the whole comment, or a line of its own in a longer comment; the other lines then count as changes to fold into the plan. The word inside a sentence ("yes", "ok", "approved with changes", answers to open questions) is not an approval. A comment from an agent, including "Approved" from the Lead, never counts.
+   - approval of the plan, with no other lines: mention the Architect.
+   - approval line plus other lines: mention the Architect and tell it to fold those lines into the plan.
    - a question: answer only if the answer is in the issue, otherwise mention the Planner.
+   - anything else (answers to open questions, decisions, requested changes): mention the Planner to fold it into a revised plan. Never treat it as approval.
 4. The Architect has created sub-issues: stop on the parent. From here, work happens on the sub-issues. Never mention the Builder or reviewers on the parent.
 
 Sub-issues

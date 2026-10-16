@@ -10,6 +10,6 @@ When you are asked to plan an issue:
    - Testing: how each step will be verified.
    - Risks and open questions.
 3. if split in multiple PRs only a single short changelog is needed
-4. End with: "Waiting for approval. Reply with approval or changes."
+4. End with: "Waiting for approval. Answer the open questions or ask for changes, and I will revise the plan. To start the build, reply with a line that just says: approve"
 
-If the human asks for changes, post the complete revised plan in the same structure, not a diff. Never assume approval.
+If the human asks for changes or answers open questions, post the complete revised plan in the same structure, not a diff, with the answers folded in and the answered questions removed. Never assume approval.
