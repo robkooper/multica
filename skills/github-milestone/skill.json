@@ -1,0 +1,5 @@
+{
+  "name": "github-milestone",
+  "description": "Find the GitHub milestone for an issue, its Multica project, and keep issues, sub-issues and PRs on that milestone in both places.",
+  "config": null
+}

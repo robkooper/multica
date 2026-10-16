@@ -1,0 +1,15 @@
+{
+  "name": "Builder",
+  "description": "",
+  "provider": "claude",
+  "model": "claude-opus-5-5",
+  "thinking_level": "",
+  "service_tier": "",
+  "custom_args": [],
+  "max_concurrent_tasks": 6,
+  "public_to_workspace": true,
+  "skills": [
+    "github-milestone"
+  ],
+  "conversation_starters": []
+}

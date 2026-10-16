@@ -1,0 +1,36 @@
+{
+  "name": "Delivery",
+  "description": "",
+  "leader": "Lead",
+  "members": [
+    {
+      "name": "Lead",
+      "role": "leader"
+    },
+    {
+      "name": "Planner",
+      "role": "Writes a plan for a new issue and revises it on feedback"
+    },
+    {
+      "name": "Architect",
+      "role": "Turns an approved plan into ordered sub-issues"
+    },
+    {
+      "name": "Builder",
+      "role": "Implements one sub-issue per PR, as a stack"
+    },
+    {
+      "name": "Reviewer A",
+      "role": "Reviews PRs for correctness and tests"
+    },
+    {
+      "name": "Reviewer B",
+      "role": "Reviews PRs for security, maintainability and operations"
+    },
+    {
+      "name": "Senior Reviewer",
+      "role": "final check before human review"
+    }
+  ],
+  "human_members": []
+}

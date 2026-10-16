@@ -1,0 +1,18 @@
+{
+  "title": "GitHub Issue Sync",
+  "mode": "run_only",
+  "status": "active",
+  "assignee_type": "agent",
+  "agent": "Lead",
+  "project": null,
+  "issue_title_template": null,
+  "triggers": [
+    {
+      "kind": "schedule",
+      "enabled": true,
+      "cron": "TZ=America/Chicago 0 8 * * *",
+      "timezone": "America/Chicago",
+      "label": null
+    }
+  ]
+}

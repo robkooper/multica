@@ -1,0 +1,13 @@
+{
+  "name": "Release Agent",
+  "description": "Final Check before a release is minted.",
+  "provider": "claude",
+  "model": "claude-fable-5-1",
+  "thinking_level": "",
+  "service_tier": "",
+  "custom_args": [],
+  "max_concurrent_tasks": 6,
+  "public_to_workspace": false,
+  "skills": [],
+  "conversation_starters": []
+}

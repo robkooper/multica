@@ -1,0 +1,13 @@
+{
+  "name": "Reviewer B",
+  "description": "",
+  "provider": "opencode",
+  "model": "lumen/deepseek-v4-flash",
+  "thinking_level": "",
+  "service_tier": "",
+  "custom_args": [],
+  "max_concurrent_tasks": 6,
+  "public_to_workspace": true,
+  "skills": [],
+  "conversation_starters": []
+}
