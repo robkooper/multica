@@ -15,7 +15,7 @@ Multica squad configuration as code. `story.md` is the owner's Medium article th
 - `dump.sh` overwrites the files here with what is in the workspace. Prompt edits made in the Multica UI are lost on the next `apply.sh` unless dumped first.
 - Autopilots have `project: null` and must stay repo-agnostic so the same files work in every workspace.
 - The Lead (a small model) routes on the exact strings agents post (`Verdict: approve|changes requested`, `Senior verdict: approve|changes requested`). Change a verdict string in an agent prompt and the squad rules together.
-- On sub-issues the agents hand off directly (Architect sets the first to todo; Builder mentions reviewers, then the Senior Reviewer, then moves the next sub-issue to todo; Senior Reviewer sets in_review). The squad rules for sub-issues are only a fallback for a missing hand-off. Do not add a squad rule that duplicates an agent's own hand-off, or agents get started twice.
+- On sub-issues the agents hand off directly (Architect sets the first to todo; Builder mentions reviewers, then the Senior Reviewer, then moves the next sub-issue to todo; Senior Reviewer sets in_review). Approvals are per commit: any new commit, including fixes for the Senior Reviewer, goes back to both Reviewer A and Reviewer B, and the Senior Reviewer refuses a head that both have not approved. The squad rules for sub-issues are only a fallback for a missing hand-off. Do not add a squad rule that duplicates an agent's own hand-off, or agents get started twice.
 - `multica` CLI facts that are easy to get wrong:
   - `issue create` has no metadata flag; use `multica issue metadata set <id> --key K --value V`.
   - `issue list --limit` max is 100; page with `--offset` until `has_more` is false.
