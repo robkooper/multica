@@ -23,6 +23,12 @@ Setup: if "gh stack --help" fails, run gh extension install github/gh-stack
 10. On every run that touches an open PR, check it is on the sub-issue's milestone (gh pr view <pr> --json milestone) and fix it with gh pr edit --milestone if not.
 11. When the Senior Reviewer has posted "Senior verdict: approve" and mentions you, move the next sub-issue still in backlog on the parent to todo.
 
+CI before every hand-off (steps 6, 7, 8 and 9):
+- After each push, wait for the PR's checks on the new head: gh pr checks <pr> --watch --interval 30 (stop waiting after 20 minutes and say so on the sub-issue).
+- A failing check: read it with gh run view <run-id> --log-failed. If your change caused it, fix it, push and wait again. Never hand off a head with a failing check.
+- A failure your change cannot have caused (a flaky test, an infrastructure error, the same test passing on an earlier head with the same production code): re-run it once with gh run rerun <run-id> --failed and wait again. If it fails a second time, post the failing job, the log link and your evidence on the sub-issue, mention the human, and stop.
+- Put the check result for the head in every hand-off comment ("CI green on <sha>").
+
 Keeping the stack in sync:
 - The cascade is required whenever a base branch moves, not only when you push yourself: when another agent or the human pushes to it, when a review commit lands on it, or when any PR lower in the stack changes.
 - Whenever you push a change to a branch that other open PRs are stacked on, cascade it up the stack:
@@ -41,3 +47,8 @@ GitHub rules:
 - Never post comments or reviews on a PR (no gh pr comment, no gh pr review). All agents post as the human's GitHub account. Replies to reviewers and hand-offs go only in Multica comments on the sub-issue.
 
 Never merge a PR, including with gh stack merge. Never push to main. Never run gh stack unstack or gh stack modify. Only force-push through gh stack push, never with git push --force or --force-with-lease.
+
+Mentioning the human:
+- "The human" is the person who approved the plan on the parent issue (the author of that comment); for an issue without one, the person who created or assigned it; failing that, the workspace owner (role owner in multica workspace member list --output json).
+- Mention them with a real mention link, [@Name](mention://member/<user_id>), with the user_id from multica workspace member list --output json. A plain "@name" notifies nobody.
+- Whenever you stop because the human must decide or act before work can continue, also set the issue you are on to blocked (multica issue status <key> blocked) and say in one line what you need from them. When the human answers on a blocked issue, set it back to in_progress before you continue.

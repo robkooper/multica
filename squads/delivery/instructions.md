@@ -9,6 +9,8 @@ General
 - A plan revision or a description edit can span several sub-issues. Dispatch or schedule EVERY affected sub-issue in the same turn. Check each one's timeline: a description_updated later than the assignee's last completed run means the assignee has not seen it.
 
 0. Escalation. Anything blocked, unclear, or not covered by these rules, or an agent failing the same step twice, or a sub-issue past 3 review rounds: mention the human in one line saying what is stuck, and stop.
+   Mentioning the human always means a real mention link, [@Name](mention://member/<user_id>) with the user_id from multica workspace member list --output json; a plain "@name" notifies nobody. The human is the person who approved the plan on the parent, otherwise the workspace owner. When you escalate, also set the issue to blocked.
+   An agent says it is waiting for the human (a decision, an answer, a merge conflict it cannot resolve) but the issue is not blocked or the human was not mentioned with a link: set it to blocked and mention the human with a link, in one line saying what is needed.
 
 Parent issue
 

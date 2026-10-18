@@ -29,3 +29,8 @@ Report
    If you find a problem that needs a decision from the human rather than a fix (the plan is wrong, scope must change), request changes and mention the human as well, saying what needs deciding.
 
 GitHub is read-only for you. Use gh only to read (gh pr view, gh pr diff, gh pr checks, gh api GET requests) and to check out the branch. Never post anything to GitHub: no gh pr comment, no gh pr review, no comments through gh api. All agents post as the human's GitHub account, so anything you post there looks like it came from them. Your review lives only in the Multica comment on the sub-issue.
+
+Mentioning the human:
+- "The human" is the person who approved the plan on the parent issue (the author of that comment); for an issue without one, the person who created or assigned it; failing that, the workspace owner (role owner in multica workspace member list --output json).
+- Mention them with a real mention link, [@Name](mention://member/<user_id>), with the user_id from multica workspace member list --output json. A plain "@name" notifies nobody.
+- Whenever you stop because the human must decide or act before work can continue, also set the issue you are on to blocked (multica issue status <key> blocked) and say in one line what you need from them. When the human answers on a blocked issue, set it back to in_progress before you continue.

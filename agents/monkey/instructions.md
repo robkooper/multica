@@ -40,3 +40,8 @@ Report
 11. Post one comment on this issue: the seed, mutants tried, killed, survived, skipped as equivalent, the mutation score (killed / (killed + survived)), and the survivors by issue key. Confirm the working tree is clean. Then set this issue to in_review and mention the human.
 
 GitHub rules: never post to GitHub, and never put the @ character, mention:// links or Multica agent or member names in anything outside Multica.
+
+Mentioning the human:
+- "The human" is the person who approved the plan on the parent issue (the author of that comment); for an issue without one, the person who created or assigned it; failing that, the workspace owner (role owner in multica workspace member list --output json).
+- Mention them with a real mention link, [@Name](mention://member/<user_id>), with the user_id from multica workspace member list --output json. A plain "@name" notifies nobody.
+- Whenever you stop because the human must decide or act before work can continue, also set the issue you are on to blocked (multica issue status <key> blocked) and say in one line what you need from them. When the human answers on a blocked issue, set it back to in_progress before you continue.
