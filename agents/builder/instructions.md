@@ -6,12 +6,13 @@ Setup: if "gh stack --help" fails, run gh extension install github/gh-stack
 2. Branch name: <issue key in lowercase>-<short-slug>, for example key-13-add-ruff-config. Base it on the Stack base from the description. For a previous sub-issue's branch, run git fetch origin <branch> and branch from origin/<branch>. All branches in a stack must live in the same repository, never a fork.
 3. Implement the change, add or update tests, and run the project's tests and linters until they pass.
 4. Commit with clear messages. Never add Co-authored-by lines or any tool or AI attribution to commits or PR text.
+   When the parent issue came from GitHub (its gh_number metadata, see multica issue metadata list <parent>), link the commits to it. On the last sub-issue (n equals total in its "<n>/<total>" title prefix) add the line "Fixes #<gh_number>" to the message of at least one commit; on every other sub-issue use "Part of #<gh_number>". The repository squash-merges with the commit messages, so the "Fixes" line lands on main and closes the GitHub issue even when the PR is merged into a stack branch. Never put "Fixes" on an earlier sub-issue: it would close the GitHub issue before the rest of the stack is merged.
 5. Push and open the PR:
    git push -u origin <branch>
    gh pr create --base <stack base branch> --title "<title>" --milestone "<milestone title>"
    The title is a plain description of the change, without the Multica issue key or the "<n>/<total>" prefix. The key stays in the branch name, which is how Multica links the PR to the sub-issue.
    The milestone is the Milestone line of the sub-issue. If that milestone is closed by now, or the line is missing, pick the milestone with the github-milestone skill and move the sub-issue to its project. Leave out --milestone only when the Milestone line is "none" and there is still no open milestone.
-   In the body: what changed, how you tested it, "Stacked on #<n>" when the base is not main, and "Part of #<gh_number>" when the parent issue came from GitHub (its gh_number metadata, see multica issue metadata list <parent>). Never put Multica issue keys in the PR title or body; when the parent has no gh_number, leave the "Part of" line out. When the base is not main, link the PR into the GitHub stack:
+   In the body: what changed, how you tested it, "Stacked on #<n>" when the base is not main, and the same "Fixes #<gh_number>" or "Part of #<gh_number>" line as in the commits (step 4). Never put Multica issue keys in the PR title or body; when the parent has no gh_number, leave that line out. When the base is not main, link the PR into the GitHub stack:
    gh stack link <previous sub-issue's PR number> <this PR number>
    This creates the stack if the previous PR is not in one yet, or adds this PR to the top of the existing stack. If the command exits with code 9, stacked PRs are not enabled for the repository: leave the PR open, say so in a comment on the sub-issue, and stop. On any other failure, report the error on the sub-issue and stop.
 6. Request review: get the reviewers' ids with multica agent list --output json and post one comment on the sub-issue with the PR link that mentions Reviewer A and Reviewer B, using exactly this form:
@@ -49,6 +50,6 @@ GitHub rules:
 Never merge a PR, including with gh stack merge. Never push to main. Never run gh stack unstack or gh stack modify. Only force-push through gh stack push, never with git push --force or --force-with-lease.
 
 Mentioning the human:
-- "The human" is the person who approved the plan on the parent issue (the author of that comment); for an issue without one, the person who created or assigned it; failing that, the workspace owner (role owner in multica workspace member list --output json).
+- "The human" is the person who approved the plan on the parent issue (the author of that comment); for an issue without one, the person (not an agent) who created or assigned it; failing that, the workspace owner (role owner in multica workspace member list --output json).
 - Mention them with a real mention link, [@Name](mention://member/<user_id>), with the user_id from multica workspace member list --output json. A plain "@name" notifies nobody.
 - Whenever you stop because the human must decide or act before work can continue, also set the issue you are on to blocked (multica issue status <key> blocked) and say in one line what you need from them. When the human answers on a blocked issue, set it back to in_progress before you continue.

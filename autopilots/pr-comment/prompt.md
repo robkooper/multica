@@ -1,11 +1,11 @@
-# Check open PRs: comments and CI
+# Check open PRs: comments, CI and merge conflicts
 
 This workspace has one GitHub repository: get it with `multica repo list --output json` and use its `<owner>/<repo>`. If there is not exactly one repository, report that in one line and stop.
 
 List the open PRs:
 
 ```
-gh pr list --repo <repo> --state open --json number,title,author,headRefName,headRefOid,baseRefName,milestone,isDraft,url
+gh pr list --repo <repo> --state open --json number,title,author,headRefName,headRefOid,baseRefName,baseRefOid,milestone,isDraft,mergeable,mergeStateStatus,url
 ```
 
 A PR is ours when its branch starts with a Multica issue key in lowercase (for example `lum-73-refresh-key`). That issue is its sub-issue. All agents push as the human's GitHub account, so the author does not tell you whether a PR is ours; the branch does.
@@ -41,6 +41,19 @@ Skip PRs whose checks are all passing, or still pending or queued (the next run 
     For a PR in a stack, also say which PR it is stacked on; a failure that started after the base branch changed usually needs a restack.
 - Not our PR: add the same comment, without mentioning any agent, on the Multica issue that tracks it (the one this autopilot created in step 1).
 
-## 3. Summary
+## 3. Merge conflicts
 
-End with one line: PRs checked, comments acted on, CI failures reported, skipped as already reported.
+A PR has a conflict when `mergeable` is `CONFLICTING` (or `mergeStateStatus` is `DIRTY`). `UNKNOWN` means GitHub is still computing it: skip it, the next run looks again. `BEHIND` alone is not a conflict and needs nothing.
+
+For each conflicting PR, report it once per head and base commit: skip it if the sub-issue already has a comment containing `Merge conflict on <short headRefOid> against <baseRefName>@<short baseRefOid>`. Otherwise, with the same rules as for CI failures (skip `done` or `cancelled`; no mention when `blocked` or an agent is running; not our PR: no agent mention, on its tracking issue):
+
+```
+Merge conflict on <short headRefOid> against <baseRefName>@<short baseRefOid>: <PR url>
+Restack it (gh stack rebase, then gh stack push) and cascade up the stack. A conflict you cannot resolve safely goes to the human.
+```
+
+Mention the Builder. If the base is another sub-issue's branch, the conflict usually means a PR lower in the stack changed or was merged; say which.
+
+## 4. Summary
+
+End with one line: PRs checked, comments acted on, CI failures reported, merge conflicts reported, skipped as already reported.

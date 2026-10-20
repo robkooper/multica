@@ -24,6 +24,10 @@ Apply to a workspace (creates what is missing, updates the rest):
 
     ./apply.sh <workspace> <runtime match>
 
+After connecting a workspace to the GitHub App, existing PRs are not linked until GitHub sends a new event for them. On the Multica server, replay the latest event per PR (dry run without `--apply`):
+
+    python3 redeliver_pr_events.py <owner/repo> [--days 14] [--apply]
+
 Files in `skills/<name>/files/` are uploaded as the skill's supporting files.
 
 Not stored here: custom environment variables and MCP configs (secrets),

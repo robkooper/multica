@@ -10,7 +10,7 @@
     {
       "kind": "schedule",
       "enabled": true,
-      "cron": "TZ=America/Chicago 0 8 * * *",
+      "cron": "TZ=America/Chicago 0 */4 * * *",
       "timezone": "America/Chicago",
       "label": null
     }

@@ -1,0 +1,18 @@
+{
+  "title": "Weekly Monkey",
+  "mode": "create_issue",
+  "status": "active",
+  "assignee_type": "agent",
+  "agent": "Monkey",
+  "project": null,
+  "issue_title_template": "Monkey run {{date}}",
+  "triggers": [
+    {
+      "kind": "schedule",
+      "enabled": true,
+      "cron": "TZ=America/Chicago 0 1 * * 6",
+      "timezone": "America/Chicago",
+      "label": null
+    }
+  ]
+}
