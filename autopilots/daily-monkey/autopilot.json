@@ -1,5 +1,5 @@
 {
-  "title": "Weekly Monkey",
+  "title": "Daily Monkey",
   "mode": "create_issue",
   "status": "active",
   "assignee_type": "agent",
@@ -10,7 +10,7 @@
     {
       "kind": "schedule",
       "enabled": true,
-      "cron": "TZ=America/Chicago 0 1 * * 6",
+      "cron": "TZ=America/Chicago 0 1 * * *",
       "timezone": "America/Chicago",
       "label": null
     }

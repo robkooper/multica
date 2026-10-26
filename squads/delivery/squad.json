@@ -12,6 +12,10 @@
       "role": "Writes a plan for a new issue and revises it on feedback"
     },
     {
+      "name": "Plan Checker",
+      "role": "Checks a plan for gaps before the human reviews it"
+    },
+    {
       "name": "Architect",
       "role": "Turns an approved plan into ordered sub-issues"
     },
