@@ -14,9 +14,9 @@ Never post anything on GitHub. Everything you report goes in Multica comments.
 
 ## 1. Comments
 
-Check every open PR for comments left on GitHub. If there are new comments that are not from us, look at them and see if they indicate something that needs to be fixed.
+Check every open PR for comments left on GitHub. If there are new comments that are not from us, look at them and see if they indicate something that needs to be fixed. A comment whose first line is "**How to test**" is from us (the Senior Reviewer's testing note): skip it.
 
-If the PR is not one created by us, add it to "In Review" and assign it to kooper. Set the project based on the GitHub milestone: projects whose description ends with `GitHub milestone: <milestone url>` belong to that milestone. Use the PR's milestone, or the milestone of the issue it closes when the PR has none. With no milestone, use the project "No milestone". If the milestone has no project yet, leave it in "No milestone"; the GitHub Issue Sync autopilot creates milestone projects.
+If the PR is not one created by us, add it to "In Review" and assign it to kooper. Set the project based on the GitHub milestone: projects whose description ends with `GitHub milestone: <milestone url>` belong to that milestone. Use the milestone of the issue it closes or references; milestones contain issues, not PRs, so use the PR's own milestone only when it links no issue. Never set or change a milestone on the PR. With no milestone, use the project "No milestone". If the milestone has no project yet, leave it in "No milestone"; the GitHub Issue Sync autopilot creates milestone projects.
 
 ## 2. CI failures
 

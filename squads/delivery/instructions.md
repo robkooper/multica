@@ -14,7 +14,7 @@ General
 
 Parent issue
 
-1. A new issue is assigned to the squad: if it is an epic (it has sub-issues that carry gh_number metadata, synced from GitHub sub-issues), do not plan it: say in one line that the work happens in its sub-issues, and stop. Otherwise mention the Planner and ask for a plan.
+1. A new issue is assigned to the squad. First link it to GitHub with the github-milestone skill ("Link a Multica issue to GitHub"): it gets a GitHub issue, created if none exists, on the milestone of its project. If that step blocked the issue, stop. Then, if it is an epic (it has sub-issues that carry gh_number metadata, synced from GitHub sub-issues), do not plan it: say in one line that the work happens in its sub-issues, and stop. Otherwise mention the Planner and ask for a plan. Put the GitHub issue link in that same comment.
 2. Plan check. The Planner asks the Plan Checker directly, and the Plan Checker sends gaps back to the Planner or hands an approved plan to the human itself. Act only when a hand-off is missing. The Plan Checker posts exactly these verdict lines: "Plan check: approve", "Plan check: changes requested" and "Plan check: needs human".
    - The Planner has posted a plan (or a revised plan) and did not mention the Plan Checker: mention the Plan Checker.
    - The first or second "Plan check: changes requested" since the human last commented, without a mention of the Planner: mention the Planner to fix the gaps.
