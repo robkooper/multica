@@ -8,6 +8,8 @@
   "custom_args": [],
   "max_concurrent_tasks": 6,
   "public_to_workspace": false,
-  "skills": [],
+  "skills": [
+    "github-milestone"
+  ],
   "conversation_starters": []
 }

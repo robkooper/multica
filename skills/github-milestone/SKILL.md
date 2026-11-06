@@ -27,7 +27,7 @@ Add `--due-date <YYYY-MM-DD>` when the milestone has a due date.
 
 ## Link a Multica issue to GitHub
 
-For a Multica issue that is not a sub-issue the Architect created (it has no parent, or it has `gh_number`), make sure it has a GitHub issue on the right milestone. First find the milestone as above, and put the Multica issue in that milestone's project if it is not there yet.
+For a Multica issue that is not a sub-issue the Architect created (Architect sub-issues have a title that starts with "<n>/<total>" and no `gh_number`; this covers issues with no parent, issues with `gh_number`, and Monkey findings), make sure it has a GitHub issue on the right milestone. Only the Lead does this (squad rule 1), when the issue leaves backlog; other agents never create GitHub issues. First find the milestone as above, and put the Multica issue in that milestone's project if it is not there yet.
 
 1. The issue has `gh_number` (`multica issue metadata list <key>`): read it with `gh issue view <gh_number> --repo <repo> --json number,url,milestone`. If its milestone is not the milestone you found, set it with `gh issue edit <gh_number> --repo <repo> --milestone "<milestone title>"`. Done.
 2. No `gh_number`: look for the same issue on GitHub, which may not have been synced yet:

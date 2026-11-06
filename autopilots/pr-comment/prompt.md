@@ -31,8 +31,7 @@ Skip PRs whose checks are all passing, or still pending or queued (the next run 
 - Report each failure once per head commit. Look at the sub-issue's comments first: if one already contains `CI failed on <first 7 characters of headRefOid>`, skip it.
 - Our PR: get the sub-issue with `multica issue get <KEY>`.
   - If the sub-issue is `done` or `cancelled`, skip it.
-  - If it is `blocked`, or an agent is already running on it (`multica issue runs <KEY>` shows a `running` or `queued` run), only add the comment below without a mention; the run in progress will see it.
-  - Otherwise add a comment on the sub-issue that mentions the Builder ([@Builder](mention://agent/<id>), id from `multica agent list --output json`):
+  - Otherwise add the comment below on the sub-issue, without mentioning any agent: the sub-issue is assigned to the Delivery squad, and its Lead decides who fixes it. A sub-issue still assigned to the Builder directly (older ones) gets a mention of the Builder ([@Builder](mention://agent/<id>), id from `multica agent list --output json`) instead, unless it is `blocked` or an agent is already running on it (`multica issue runs <KEY>` shows a `running` or `queued` run).
     ```
     CI failed on <short sha>: <check name> (<link>)
     <the first failing test or error line from gh run view <run-id> --repo <repo> --log-failed, at most 10 lines>
@@ -45,14 +44,14 @@ Skip PRs whose checks are all passing, or still pending or queued (the next run 
 
 A PR has a conflict when `mergeable` is `CONFLICTING` (or `mergeStateStatus` is `DIRTY`). `UNKNOWN` means GitHub is still computing it: skip it, the next run looks again. `BEHIND` alone is not a conflict and needs nothing.
 
-For each conflicting PR, report it once per head and base commit: skip it if the sub-issue already has a comment containing `Merge conflict on <short headRefOid> against <baseRefName>@<short baseRefOid>`. Otherwise, with the same rules as for CI failures (skip `done` or `cancelled`; no mention when `blocked` or an agent is running; not our PR: no agent mention, on its tracking issue):
+For each conflicting PR, report it once per head and base commit: skip it if the sub-issue already has a comment containing `Merge conflict on <short headRefOid> against <baseRefName>@<short baseRefOid>`. Otherwise, with the same rules as for CI failures (skip `done` or `cancelled`; no agent mention on a sub-issue assigned to the squad; not our PR: no agent mention, on its tracking issue):
 
 ```
 Merge conflict on <short headRefOid> against <baseRefName>@<short baseRefOid>: <PR url>
 Restack it (gh stack rebase, then gh stack push) and cascade up the stack. A conflict you cannot resolve safely goes to the human.
 ```
 
-Mention the Builder. If the base is another sub-issue's branch, the conflict usually means a PR lower in the stack changed or was merged; say which.
+If the base is another sub-issue's branch, the conflict usually means a PR lower in the stack changed or was merged; say which.
 
 ## 4. Summary
 
