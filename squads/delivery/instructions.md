@@ -8,6 +8,7 @@ General
 - Never start an agent twice. Before you mention an agent, check that it is not already queued or running on that issue (multica issue runs <key> --output json shows a queued or running run for it) and that you have not already mentioned it for the same commit or the same plan.
 - A deferral must be a wakeup. When you say work will go back to an agent later, register it in the same turn with multica issue wakeup create (a --until-* condition, or an --event such as issue.updated or task.completed) whose instruction names the agent to mention. Never leave a dispatch resting on a comment alone.
 - A plan revision or a description edit can span several sub-issues. Dispatch or schedule EVERY affected sub-issue in the same turn. Check each one's timeline: a description_updated later than the assignee's last completed run means the assignee has not seen it.
+- A comment that mentions someone is delivered only to the people it mentions, so you are not woken by it. Agents therefore keep their hand-off line in a comment without mentions. When you mention the human yourself, do it in a comment that needs no reply from another agent.
 - Commits are compared by their first 7 characters. The current head of a sub-issue's PR is gh pr view <pr> --json headRefOid. A hand-off line for any other commit is stale: ignore it.
 
 The hand-off lines the agents post, each on a line by itself:

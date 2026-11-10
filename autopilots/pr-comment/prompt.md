@@ -20,7 +20,7 @@ If the PR is not one created by us, add it to "In Review" and assign it to koope
 
 ## 2. CI failures
 
-For every open PR that is not a draft, check the checks on its current head:
+Only our PRs: never report failing checks on a PR that is not ours; its author handles them. For every open PR of ours that is not a draft, check the checks on its current head:
 
 ```
 gh pr checks <number> --repo <repo> --json name,state,bucket,link
@@ -38,13 +38,12 @@ Skip PRs whose checks are all passing, or still pending or queued (the next run 
     Fix it, or re-run it once if it is unrelated to the change, and hand off again only with CI green.
     ```
     For a PR in a stack, also say which PR it is stacked on; a failure that started after the base branch changed usually needs a restack.
-- Not our PR: add the same comment, without mentioning any agent, on the Multica issue that tracks it (the one this autopilot created in step 1).
 
 ## 3. Merge conflicts
 
 A PR has a conflict when `mergeable` is `CONFLICTING` (or `mergeStateStatus` is `DIRTY`). `UNKNOWN` means GitHub is still computing it: skip it, the next run looks again. `BEHIND` alone is not a conflict and needs nothing.
 
-For each conflicting PR, report it once per head and base commit: skip it if the sub-issue already has a comment containing `Merge conflict on <short headRefOid> against <baseRefName>@<short baseRefOid>`. Otherwise, with the same rules as for CI failures (skip `done` or `cancelled`; no agent mention on a sub-issue assigned to the squad; not our PR: no agent mention, on its tracking issue):
+Only our PRs: never report a merge conflict on a PR that is not ours; its author resolves it. For each conflicting PR of ours, report it once per head commit, however often the base moves: skip it if the sub-issue already has a comment containing `Merge conflict on <short headRefOid>`. Otherwise, with the same rules as for CI failures (skip `done` or `cancelled`; no agent mention on a sub-issue assigned to the squad):
 
 ```
 Merge conflict on <short headRefOid> against <baseRefName>@<short baseRefOid>: <PR url>
