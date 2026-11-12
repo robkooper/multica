@@ -43,8 +43,8 @@ Remember the map from milestone number to project id, plus the id of "No milesto
 ## 3. Fetch the GitHub issues
 
 ```
-gh issue list --repo <repo> --state open --limit 2000 --json number,title,body,author,updatedAt,url,milestone,parent,subIssuesSummary
-gh issue list --repo <repo> --state closed --search "updated:>=<today minus 3 days, YYYY-MM-DD>" --limit 2000 --json number,title,body,author,updatedAt,url,milestone,parent,subIssuesSummary
+gh issue list --repo <repo> --state open --limit 2000 --json number,title,body,author,updatedAt,url,milestone,parent,subIssuesSummary,closedByPullRequestsReferences
+gh issue list --repo <repo> --state closed --search "updated:>=<today minus 3 days, YYYY-MM-DD>" --limit 2000 --json number,title,body,author,updatedAt,url,milestone,parent,subIssuesSummary,closedByPullRequestsReferences
 ```
 
 The second list holds closed issues changed recently, so a milestone change on a closed issue still reaches Multica. Pull requests are not included, which is what we want. The issue's project is the project of its milestone, or "No milestone" when `milestone` is null.
@@ -102,6 +102,18 @@ Parent links:
 
 A child keeps its own milestone and project; it does not move with its epic.
 
+## 4c. Linked pull requests
+
+`closedByPullRequestsReferences` lists the PRs linked to an issue on GitHub (in its Development sidebar, or through a closing keyword such as "Fixes #61" in the PR). Multica cannot link these itself, so record them as notes. Check every issue from step 3 that has a Multica issue, whether or not `updatedAt` changed.
+
+For each linked PR, look at the Multica issue's comments (`multica issue comment list <id> --output json --full`). If none contains the PR's url, read the PR with `gh pr view <number> --repo <repo> --json number,title,state,url` and add one note with a clickable link, in exactly this format:
+
+```
+/note Linked pull request on GitHub: [#<number> <title>](<url>) (<state, lowercase>)
+```
+
+Add each PR once per issue; never edit or repeat the note when the PR's state changes later. A PR that is no longer linked keeps its note.
+
 ## 5. Comments
 
 Fetch comments created or edited in the last three days, for the whole repository at once:
@@ -134,10 +146,11 @@ gh issue view <number> --repo <repo> --json state,stateReason,url
 ```
 
 - Still open (for example it was not returned because of the limit): do nothing.
-- Closed and the Multica issue is in `backlog`: set it to `done`, or to `cancelled` when `stateReason` is `NOT_PLANNED`.
-- Closed and the Multica issue is in any other status: add a comment `/note Closed on GitHub (<url>).` unless that note is already there. Do not change the status.
+- Closed, whatever the Multica status: close it the same way, with `multica issue update <id> --status done --no-start`, or `--status cancelled` when `stateReason` is `NOT_PLANNED`, and add a comment `/note Closed on GitHub (<url>).` If an agent is still running on it (`multica issue runs <id>` shows a `running` or `queued` run), stop that run first with `multica issue cancel-task <run id> --issue <id>`.
+  - Closed as not planned: also cancel its sub-issues without `gh_number` that are not `done` or `cancelled` (Architect sub-issues and Monkey findings), at every level, the same way; the work is no longer wanted. Leave sub-issues with their own `gh_number`: they follow their own GitHub issue.
+  - Closed as completed: leave its sub-issues alone. They close themselves when their PRs merge, and an open one may still have work the human wants to finish.
 - Not found (deleted or transferred): add a comment `/note No longer on GitHub.` unless that note is already there.
 
 ## 7. Summary
 
-End with one line: repo, projects created, projects updated, issues created, issues updated, issues moved (sub-issues counted separately), parent links set or cleared, comments added, comments updated, issues closed.
+End with one line: repo, projects created, projects updated, issues created, issues updated, issues moved (sub-issues counted separately), parent links set or cleared, linked PRs noted, comments added, comments updated, issues closed.

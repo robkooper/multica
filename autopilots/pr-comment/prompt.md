@@ -31,7 +31,7 @@ Skip PRs whose checks are all passing, or still pending or queued (the next run 
 - Report each failure once per head commit. Look at the sub-issue's comments first: if one already contains `CI failed on <first 7 characters of headRefOid>`, skip it.
 - Our PR: get the sub-issue with `multica issue get <KEY>`.
   - If the sub-issue is `done` or `cancelled`, skip it.
-  - Otherwise add the comment below on the sub-issue, without mentioning any agent: the sub-issue is assigned to the Delivery squad, and its Lead decides who fixes it. A sub-issue still assigned to the Builder directly (older ones) gets a mention of the Builder ([@Builder](mention://agent/<id>), id from `multica agent list --output json`) instead, unless it is `blocked` or an agent is already running on it (`multica issue runs <KEY>` shows a `running` or `queued` run).
+  - Otherwise add the comment below on the sub-issue and start the Builder on it: end the comment with a mention of the Builder ([@Builder](mention://agent/<id>), id from `multica agent list --output json`). This autopilot runs as the Lead, and the Lead never reacts to its own comments, so a comment without the mention would start nobody. Leave the mention out only when the sub-issue is `blocked` or an agent is already running on it (`multica issue runs <KEY>` shows a `running` or `queued` run); that run will see the comment.
     ```
     CI failed on <short sha>: <check name> (<link>)
     <the first failing test or error line from gh run view <run-id> --repo <repo> --log-failed, at most 10 lines>
@@ -43,7 +43,7 @@ Skip PRs whose checks are all passing, or still pending or queued (the next run 
 
 A PR has a conflict when `mergeable` is `CONFLICTING` (or `mergeStateStatus` is `DIRTY`). `UNKNOWN` means GitHub is still computing it: skip it, the next run looks again. `BEHIND` alone is not a conflict and needs nothing.
 
-Only our PRs: never report a merge conflict on a PR that is not ours; its author resolves it. For each conflicting PR of ours, report it once per head commit, however often the base moves: skip it if the sub-issue already has a comment containing `Merge conflict on <short headRefOid>`. Otherwise, with the same rules as for CI failures (skip `done` or `cancelled`; no agent mention on a sub-issue assigned to the squad):
+Only our PRs: never report a merge conflict on a PR that is not ours; its author resolves it. For each conflicting PR of ours, report it once per head commit, however often the base moves: skip it if the sub-issue already has a comment containing `Merge conflict on <short headRefOid>`. Otherwise, with the same rules as for CI failures (skip `done` or `cancelled`; mention the Builder unless the sub-issue is `blocked` or an agent is already running on it):
 
 ```
 Merge conflict on <short headRefOid> against <baseRefName>@<short baseRefOid>: <PR url>

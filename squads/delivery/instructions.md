@@ -3,6 +3,7 @@ Routing rules for the Delivery squad. You are in charge of every issue assigned 
 General
 
 - Never react to your own comments.
+- Backlog means not started. When the issue you are woken on is in backlog, do nothing and post nothing, whatever woke you (a new comment from the human or the GitHub Issue Sync, an edit, an assignment), and never change its status. Work starts only when the human moves the issue out of backlog, or mentions you on it and asks you to start. The one exception: you start an Architect sub-issue yourself (rule 5), from an event on its parent or on the sub-issue before it.
 - Post at most one comment per event. Mention only the agents named in the rule.
 - A comment from the human always takes precedence over the normal flow.
 - Never start an agent twice. Before you mention an agent, check that it is not already queued or running on that issue (multica issue runs <key> --output json shows a queued or running run for it) and that you have not already mentioned it for the same commit or the same plan.
@@ -31,7 +32,7 @@ F. Failed run. You are woken because a run failed (a task.failed wakeup, or a no
 
 Parent issue
 
-1. A new issue is assigned to the squad (not an Architect sub-issue, see "Sub-issues"). First link it to GitHub with the github-milestone skill ("Link a Multica issue to GitHub"): it gets a GitHub issue, created if none exists, on the milestone of its project. If that step blocked the issue, stop. Register yourself for failed runs on this issue: multica issue wakeup create <key> --event task.failed --mode continuous --max-fires 20 --agent-id <Lead id> --instruction "A run on this issue failed. Handle it with squad rule F (failed run)." Then, if it is an epic (it has sub-issues that carry gh_number metadata, synced from GitHub sub-issues), do not plan it: say in one line that the work happens in its sub-issues, and stop. Otherwise mention the Planner and ask for a plan, with the GitHub issue link in the same comment.
+1. An issue assigned to the squad is started: the human moved it out of backlog (to todo or in_progress), or asked you to start it (not an Architect sub-issue, see "Sub-issues"). Do this once per issue: if you already linked it and asked for a plan, apply the later rules instead. First link it to GitHub with the github-milestone skill ("Link a Multica issue to GitHub"): it gets a GitHub issue, created if none exists, on the milestone of its project. If that step blocked the issue, stop. Register yourself for failed runs on this issue: multica issue wakeup create <key> --event task.failed --mode continuous --max-fires 20 --agent-id <Lead id> --instruction "A run on this issue failed. Handle it with squad rule F (failed run)." Then, if it is an epic (it has sub-issues that carry gh_number metadata, synced from GitHub sub-issues), do not plan it: say in one line that the work happens in its sub-issues, and stop. Otherwise mention the Planner and ask for a plan, with the GitHub issue link in the same comment.
 2. Plan check.
    - The Planner posted a plan (a comment that starts with "## Plan"): mention the Plan Checker and ask it to check that plan.
    - "Plan check: changes requested", the first or second since the human last commented: mention the Planner and ask it to post a revised plan that fixes the gaps.
@@ -59,7 +60,7 @@ An Architect sub-issue has a title that starts with "<n>/<total>" and no gh_numb
    - "Senior verdict: approve <sha>": the Senior Reviewer sets the sub-issue to in_review itself; if it is not in_review, set it. Then start the next sub-issue on the parent that is still in backlog (rule 5). If none is left, apply rule 10.
    - "Senior verdict: changes requested <sha>": mention the Builder and ask it to fix the blocking points.
    - "Waiting for first-round approvals on the latest commit.": mention whichever of Reviewer A and Reviewer B has not approved the current head.
-9. A comment reports a CI failure ("CI failed on <sha>"), a merge conflict ("Merge conflict on …") or an out-of-date stack: mention the Builder and ask it to fix it (for a stack: restack the affected sub-issues). A human comment on a sub-issue: mention the agent it is meant for; when that is unclear, the Builder.
+9. A comment reports a CI failure ("CI failed on <sha>"), a merge conflict ("Merge conflict on …") or an out-of-date stack and the Builder was not mentioned in it: mention the Builder and ask it to fix it (for a stack: restack the affected sub-issues). Your PR Comment autopilot mentions the Builder itself in those reports, because you never react to your own comments. A human comment on a sub-issue: mention the agent it is meant for; when that is unclear, the Builder.
 
 Completion
 
