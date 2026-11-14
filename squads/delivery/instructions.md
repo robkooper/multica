@@ -16,7 +16,7 @@ The hand-off lines the agents post, each on a line by itself:
 - Planner: a comment that starts with "## Plan".
 - Plan Checker: "Plan check: approve", "Plan check: changes requested", "Plan check: needs human".
 - Architect: "Sub-issues created: <KEY>, <KEY>, …" on the parent.
-- Builder: "Ready for review: <sha>" (a head that needs review), "No change: <sha>" (nothing to route).
+- Builder: "Ready for review: <sha>" (a head that needs review), "Restacked: <sha> (was <old sha>)" (a rebase that left the PR's own change unchanged), "No change: <sha>" (nothing to route).
 - Reviewer A and Reviewer B: "Verdict: approve <sha>", "Verdict: changes requested <sha>".
 - Senior Reviewer: "Senior verdict: approve <sha>", "Senior verdict: changes requested <sha>", or "Waiting for first-round approvals on the latest commit."
 
@@ -49,17 +49,23 @@ Sub-issues
 
 An Architect sub-issue has a title that starts with "<n>/<total>" and no gh_number; it is assigned to the squad so that you see every comment on it. These rules are for those. A sub-issue that carries gh_number is a GitHub child of an epic and is an issue of its own: rules 1 to 4 apply to it, and it gets its own plan and its own sub-issues. The same holds for a finding the Monkey filed under its run issue (title "[should-fix] Untested: …" or "[nit] Untested: …"): when it leaves backlog it is a new issue for rules 1 to 4, not a sub-issue to build.
 
-5. Start a sub-issue: set it to in_progress and, on that sub-issue, mention the Builder and ask it to build it. Sub-issues are built in order, one at a time: start the next one only after the previous one got "Senior verdict: approve".
+5. Start a sub-issue: set it to in_progress and, on that sub-issue, mention the Builder and ask it to build it. Sub-issues are built in order, one at a time: start the next one only after the previous one passed rule 8a (approved and CI green).
 6. "Ready for review: <sha>" from the Builder, for the current head: if open PRs are stacked on this one, first check each descendant with gh api repos/<org>/<repo>/compare/<base-branch>...<head-branch> --jq .status. If one is behind or diverged, mention the Builder to restack upstack and stop. Otherwise mention Reviewer A and Reviewer B in one comment and ask them to review that commit. Every new commit needs both approvals again, including after a Senior Reviewer round.
-   "No change: <sha>": do nothing, unless both reviewers and the Senior Reviewer have already approved that head and the sub-issue is not in_review yet (then apply rule 8).
-7. A "Verdict: …" from Reviewer A or Reviewer B for the current head: wait until both have posted a verdict for that head, then:
+   "Restacked: <sha> (was <old sha>)": if the old commit had approvals from both reviewers (and the Senior Reviewer, when it had reviewed it), mention only Reviewer B and ask it for a restack check of that commit. Its "Verdict: approve <sha>" then counts for both reviewers and the Senior Reviewer: go straight to the CI check (rule 8a). Its "Verdict: changes requested <sha>", or an old commit without those approvals, means the full cycle: mention Reviewer A and Reviewer B as for "Ready for review".
+   "No change: <sha>": do nothing, unless the Senior Reviewer has already approved that head (then apply rule 8a).
+7. A "Verdict: …" from Reviewer A or Reviewer B for the current head (outside a restack check, see rule 6): wait until both have posted a verdict for that head, then:
    - both "Verdict: approve <sha>": mention the Senior Reviewer and ask it to review that commit.
    - any "Verdict: changes requested <sha>": mention the Builder and ask it to fix the blocking points in both reviews.
    If the other verdict has not come after its reviewer's run ended (no queued or running run left), mention that reviewer once more.
 8. The Senior Reviewer posts, for the current head:
-   - "Senior verdict: approve <sha>": the Senior Reviewer sets the sub-issue to in_review itself; if it is not in_review, set it. Then start the next sub-issue on the parent that is still in backlog (rule 5). If none is left, apply rule 10.
+   - "Senior verdict: approve <sha>": apply rule 8a.
    - "Senior verdict: changes requested <sha>": mention the Builder and ask it to fix the blocking points.
    - "Waiting for first-round approvals on the latest commit.": mention whichever of Reviewer A and Reviewer B has not approved the current head.
+8a. CI check, once the reviews of the current head are done (a Senior approval, or an approved restack check): read gh pr checks <pr>.
+   - all passed: set the sub-issue to in_review. Then start the next sub-issue on the parent that is still in backlog (rule 5). If none is left, apply rule 10.
+   - some still pending or queued: register multica issue wakeup create <key> --until-pr checks --agent-id <Lead id> --instruction "CI finished on <sha>: apply squad rule 8a." and stop.
+   - any failed: mention the Builder with the failing check and its link, and ask it to fix it. The fix is a new commit and goes through the full cycle again.
+   The next sub-issue never starts before CI is green on the previous one.
 9. A comment reports a CI failure ("CI failed on <sha>"), a merge conflict ("Merge conflict on …") or an out-of-date stack and the Builder was not mentioned in it: mention the Builder and ask it to fix it (for a stack: restack the affected sub-issues). Your PR Comment autopilot mentions the Builder itself in those reports, because you never react to your own comments. A human comment on a sub-issue: mention the agent it is meant for; when that is unclear, the Builder.
 
 Completion
