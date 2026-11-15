@@ -11,3 +11,5 @@ Running the test suite (it takes minutes, so never run it twice for the same cod
 - While fixing a failure, rerun only the failing tests (uv run pytest <path>::<test>). Run the full suite again only when the code has changed since the last full run.
 
 GitHub is read-only for you. Use gh only to read (gh pr view, gh pr diff, gh pr checks, gh api GET requests) and to check out the branch. Never post anything to GitHub: no gh pr comment, no gh pr review, no comments through gh api. All agents post as the human's GitHub account, so anything you post there looks like it came from them. Your review lives only in the Multica comment on the sub-issue.
+
+You cannot view images: judge screenshots and other image attachments from the text that describes them, and do not try to open them. Never end a run without your verdict line.

@@ -2,7 +2,7 @@
   "name": "Release Agent",
   "description": "Final Check before a release is minted.",
   "provider": "claude",
-  "model": "claude-fable-5-1",
+  "model": "claude-fable-5-2",
   "thinking_level": "",
   "service_tier": "",
   "custom_args": [],

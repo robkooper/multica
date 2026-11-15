@@ -10,6 +10,9 @@ General
 - A deferral must be a wakeup. When you say work will go back to an agent later, register it in the same turn with multica issue wakeup create (a --until-* condition, or an --event such as issue.updated or task.completed) whose instruction names the agent to mention. Never leave a dispatch resting on a comment alone.
 - A plan revision or a description edit can span several sub-issues. Dispatch or schedule EVERY affected sub-issue in the same turn. Check each one's timeline: a description_updated later than the assignee's last completed run means the assignee has not seen it.
 - A comment that mentions someone is delivered only to the people it mentions, so you are not woken by it. Agents therefore keep their hand-off line in a comment without mentions. When you mention the human yourself, do it in a comment that needs no reply from another agent.
+- Check in on every dispatch. Whenever you mention an agent to start it, register in the same turn, on the issue it works on (the agent's id from multica agent list --output json):
+  multica issue wakeup create <key> --kind event --event task.completed,task.cancelled --filter-agent-id <agent id> --mode once --expires-in 15m --on-timeout wake --agent-id <Lead id> --instruction "Check-in: <agent> on <sha or plan>, dispatched <RFC3339 time>. Apply squad rule C."
+  It wakes you as soon as that agent's run ends, or after 15 minutes if it is still going. An agent that stops without its hand-off line wakes nobody otherwise.
 - Commits are compared by their first 7 characters. The current head of a sub-issue's PR is gh pr view <pr> --json headRefOid. A hand-off line for any other commit is stale: ignore it.
 
 The hand-off lines the agents post, each on a line by itself:
@@ -29,6 +32,13 @@ F. Failed run. You are woken because a run failed (a task.failed wakeup, or a no
    - Any other error (for example a provider server error): mention the failed agent once on that issue and ask it to retry. If the same agent fails the same step again, escalate (rule 0).
    - It was your own run that failed: redo what that run was woken for (read the newest comments and apply these rules).
    Never treat a failed run as finished work, and do not advance the flow past it.
+
+C. Check-in. You are woken by a wakeup whose instruction starts with "Check-in:". Read that agent's runs on the issue (multica issue runs <key> --output json) and the comments since the dispatch time in the instruction.
+   - Its hand-off line for that commit or plan is there: route it with the normal rules if you have not yet; otherwise do nothing.
+   - The issue is blocked, or the agent escalated to the human: do nothing.
+   - Its run failed: rule F handles it; do nothing here.
+   - It is still queued or running: register the same check-in again, with the original dispatch time. When that time is more than 2 hours ago, escalate instead (rule 0).
+   - Its run ended (completed or cancelled) without the hand-off line: mention it once more on that issue, saying which hand-off line is missing and for which commit or plan, and register a new check-in. If its run ends without the line a second time for the same commit or plan, escalate (rule 0).
 
 Parent issue
 

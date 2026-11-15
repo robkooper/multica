@@ -17,11 +17,11 @@ mkdir -p skills agents squads
 
 # Skills: SKILL.md plus any supporting files
 mc skill list --output json | jq -r '.[].id' | while read -r id; do
-  s=$(mc skill get "$id" --output json)
+  s=$(mc skill get "$id" --with-content --output json)
   d="skills/$(slug "$(jq -r .name <<<"$s")")"
   mkdir -p "$d"
-  jq -r .content <<<"$s" > "$d/SKILL.md"
-  jq '{name, description, config}' <<<"$s" > "$d/skill.json"
+  jq -j .content <<<"$s" > "$d/SKILL.md"
+  jq '{name, description, config: (if .config == {} then null else .config end)}' <<<"$s" > "$d/skill.json"
   jq -c '.files[]?' <<<"$s" | while read -r f; do
     p=$(jq -r .path <<<"$f")
     case "$p" in /*|*..*) echo "skip unsafe path $p in $d"; continue;; esac
