@@ -83,6 +83,7 @@ Found, and `updatedAt` differs from `gh_updated_at`:
 
 - Title or description changed on GitHub: update them, using the same format.
 - Milestone changed (the Multica issue is in a different project than the one step 3 gives): move it with `multica issue update <id> --project <project id> --no-start`. Move all its sub-issues with it, at every level: walk them with `multica issue children <id> --output json` and move each one the same way, whatever its status. Skip a sub-issue that has its own `gh_number`; it follows its own milestone.
+  For each sub-issue you moved whose description has a line that starts with `Milestone:` (the Architect writes `Milestone: "<milestone title>"`), rewrite that one line to `Milestone: "<new milestone title>"` (or `Milestone: none` for "No milestone") and change nothing else: write the full description to a file in the current directory and run `multica issue update <sub-issue id> --description-file <file> --no-start`. The Builder and the Senior Reviewer check the PR's milestone against that line, so a stale line would block the review.
 - Never change the status, assignee or anything else.
 - Then set `gh_updated_at` to `updatedAt`.
 

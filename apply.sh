@@ -148,6 +148,12 @@ for d in autopilots/*/; do
   fi
   # Triggers: add schedules that are missing (matched on cron and timezone); add a webhook if none exists
   existing_t=$(mc autopilot trigger-list "$aid" --output json | jq '.triggers // .')
+  # Remove schedules no longer in the file, so a changed cron replaces the old one instead of adding to it
+  jq -r --slurpfile want <(jq '[.triggers[] | select(.kind == "schedule") | {c: .cron, z: (.timezone // "UTC")}]' "$f") \
+    '.[] | select(.kind == "schedule") | select(({c: .cron_expression, z: (.timezone // "UTC")}) as $t | ($want[0] | index($t)) == null) | "\(.id) \(.cron_expression)"' \
+    <<<"$existing_t" | while read -r tid tcron; do
+    mc autopilot trigger-delete "$aid" "$tid" >/dev/null && echo "  removed schedule $tcron"
+  done
   jq -c '.triggers[]' "$f" | while read -r t; do
     kind=$(jq -r .kind <<<"$t"); label=$(jq -r '.label // ""' <<<"$t")
     if [ "$kind" = schedule ]; then
